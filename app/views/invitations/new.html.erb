@@ -1,0 +1,14 @@
+<h1>Invite Users to <%= @event.title %></h1>
+
+<%= form_with url: event_invitations_path(@event), local: true do |form| %>
+  <div>
+    <%= label_tag :user_id, "Select User to Invite" %><br>
+    <%= select_tag :user_id, options_from_collection_for_select(@users, :id, :email), prompt: "Choose a user" %>
+  </div>
+
+  <div>
+    <%= form.submit "Send Invitation" %>
+  </div>
+<% end %>
+
+<%= link_to "Back to Event", event_path(@event) %>

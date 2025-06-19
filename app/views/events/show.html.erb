@@ -1,0 +1,55 @@
+<h1><%= @event.title %></h1>
+
+<p><strong>Location:</strong> <%= @event.location %></p>
+<p><strong>Date:</strong> <%= @event.date.strftime("%B %d, %Y at %I:%M %p") %></p>
+<p><strong>Created by:</strong> <%= @event.creator.email %></p>
+
+<hr>
+<% if user_signed_in? && @event.creator == current_user %>
+  <%= link_to "Edit Event", edit_event_path(@event), style: "margin-right: 10px;" %>
+
+  <%= link_to "Delete Event", event_path(@event), method: :delete, data: { confirm: "Are you sure?" } %>
+<% end %>
+
+<% if user_signed_in? %>
+  <% if @event.attendees.include?(current_user) %>
+    <%= button_to "Cancel Attendance", event_attendance_path(@event), method: :delete, data: { confirm: "Are you sure?" } %>
+  <% else %>
+    <%= button_to "Attend This Event", event_attendance_path(@event), method: :post %>
+  <% end %>
+<% else %>
+  <p><%= link_to "Log in to attend", new_user_session_path %></p>
+<% end %>
+
+<hr>
+
+<h3>Attendees:</h3>
+
+<% if @event.attendees.any? %>
+  <ul>
+    <% @event.attendees.each do |attendee| %>
+      <li><%= link_to attendee.email, user_path(attendee) %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No attendees yet.</p>
+<% end %>
+
+<%= link_to "Back to Events", events_path %>
+
+<h3>Invited Users:</h3>
+<ul>
+  <% @event.invited_users.each do |user| %>
+    <li>
+      <%= user.email %>
+      <% if current_user == @event.creator %>
+        <%= link_to "Remove Invitation", event_invitation_path(@event, user.invitations.find_by(event: @event)), method: :delete, data: { confirm: "Remove invitation?" } %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+
+<% if current_user == @event.creator %>
+  <%= link_to "Invite More Users", new_event_invitation_path(@event) %>
+<% end %>
+

@@ -1,0 +1,29 @@
+<h1>Upcoming Events</h1>
+
+<% if @upcoming_events.any? %>
+  <ul>
+    <% @upcoming_events.each do |event| %>
+      <li>
+        <%= link_to event.title, event_path(event) %> — <%= event.date.strftime("%B %d, %Y at %I:%M %p") %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No upcoming events.</p>
+<% end %>
+
+<hr>
+
+<h1>Past Events</h1>
+
+<% if @past_events.any? %>
+  <ul>
+    <% @past_events.each do |event| %>
+      <li>
+        <%= link_to event.title, event_path(event) %> — <%= event.date.strftime("%B %d, %Y at %I:%M %p") %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No past events.</p>
+<% end %>
